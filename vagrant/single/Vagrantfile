@@ -1,0 +1,91 @@
+
+VAGRANTFILE_API_VERSION = "2"
+
+################################################################################
+# check plugins
+################################################################################
+required_plugins = %w(vagrant-hostmanager vagrant-triggers vagrant-vbguest)
+
+plugins_to_install = required_plugins.select { |plugin| not Vagrant.has_plugin? plugin }
+if not plugins_to_install.empty?
+  puts "Installing plugins: #{plugins_to_install.join(' ')}"
+  if system "vagrant plugin install #{plugins_to_install.join(' ')}"
+    exec "vagrant #{ARGV.join(' ')}"
+  else
+    abort "Installation of one or more plugins has failed. Aborting."
+  end
+end
+
+################################################################################
+# Global settings
+################################################################################
+  env = 'single'
+  ip  = '10.11.11.11'
+  ram = 2048
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  config.hostmanager.enabled           = true
+  config.hostmanager.manage_host       = true
+  config.hostmanager.ignore_private_ip = false
+  config.hostmanager.include_offline   = true
+
+  config.vm.box                        = 'puppetlabs/centos-7.2-64-puppet'
+  config.vm.box_check_update           = true
+  config.ssh.insert_key                = false
+
+################################################################################
+# Triggers
+################################################################################
+  if Vagrant.has_plugin?("vagrant-triggers")
+    config.trigger.before :provision do
+      run_remote "service network restart"
+    end
+  end
+
+################################################################################
+# Virtualbox(es)
+################################################################################
+
+  config.vm.provider :virtualbox do |vb|
+    vb.name  = "flink.#{env}.vagrant"
+    vb.customize [
+      'modifyvm', :id,
+      '--groups', '/Demo',
+      '--memory', "#{ram}",
+      '--cpus', 1
+    ]
+  end
+
+  ### 
+  ### Synced directories
+  ### 
+  config.vm.synced_folder ".", "/vagrant", disabled: true
+  config.vm.synced_folder "../../puppet/hiera", "/var/lib/hiera"
+  config.vm.synced_folder "../../puppet/manifests", "/etc/puppet/environments/#{env}/manifests"
+  config.vm.synced_folder "../../puppet/modules", "/etc/puppet/environments/#{env}/modules"
+
+  ###
+  ### Networking
+  ###
+  # http port
+#  config.vm.network :forwarded_port, host_ip: "#{ip}", guest: 7474, host: 7474
+  # https port
+#  config.vm.network :forwarded_port, host_ip: "#{ip}", guest: 7473, host: 7473
+
+  ### define node
+  config.vm.define :flink do |node|
+    node.vm.hostname         = "flink.#{env}.vagrant"
+    node.hostmanager.aliases = %w(flink.localdomain flink)
+    node.vm.network :private_network, ip: "#{ip}"
+  end
+
+  ### 
+  ### Puppet provisioning
+  ### 
+  config.vm.provision :puppet do |puppet|
+    puppet.options           = "--debug --verbose"
+    puppet.environment_path  = "../../puppet/environments"
+    puppet.environment       = "#{env}"
+    puppet.hiera_config_path = "../../puppet/hiera.yaml"
+  end
+end

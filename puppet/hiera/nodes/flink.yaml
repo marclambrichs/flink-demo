@@ -1,0 +1,18 @@
+---
+classes:
+  - kafka
+  - zookeeper
+
+zookeeper::cdhver: '5'
+zookeeper::initialize_datastore: true
+zookeeper::install_java: true
+zookeeper::java_package: 'java-1.8.0-openjdk'
+zookeeper::manage_service_file: true
+zookeeper::repo: 'cloudera'
+zookeeper::service_name: 'zookeeper'
+zookeeper::service_provider: 'systemd'
+zookeeper::systemd_unit_after: 'network-online.target'
+zookeeper::systemd_unit_want: 'network-online.target'
+
+kafka::version: '0.10.0.1'
+kafka::scala_version: '2.11'
