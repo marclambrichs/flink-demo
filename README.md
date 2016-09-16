@@ -1,4 +1,4 @@
-# neo4j test environment using vagrant
+# flink test environment using vagrant
 
 ## Requirements
 
@@ -12,15 +12,10 @@
 ## Environments
 
 ### Single
-1 node => neo4j community edition
+1 node => kafka
+          zookeeper
 
 	cd vagrant/single
-	vagrant up
-
-### HA
-3 nodes => neo4j enterprise edition
-
-	cd vagrant/ha
 	vagrant up
 
 ## Quirks
