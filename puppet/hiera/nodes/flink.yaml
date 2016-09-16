@@ -1,5 +1,7 @@
 ---
 classes:
+  - collectd
+  - epel
   - kafka
   - zookeeper
 
@@ -16,3 +18,14 @@ zookeeper::systemd_unit_want: 'network-online.target'
 
 kafka::version: '0.10.0.1'
 kafka::scala_version: '2.11'
+
+collectd::purge: true
+collectd::recurse: true
+collectd::purge_config: true
+collectd::minimum_version: '5.5'
+
+collectd::plugin::write_kafka::kafka_host: 'localhost'
+collectd::plugin::write_kafka::kafka_port: 9092
+collectd::plugin::write_kafka::topics:
+  topic_collectd:
+    format: 'JSON'

@@ -28,3 +28,9 @@
 [submodule "puppet/modules/systemd"]
 	path = puppet/modules/systemd
 	url = https://github.com/camptocamp/puppet-systemd.git
+[submodule "puppet/modules/collectd"]
+	path = puppet/modules/collectd
+	url = https://github.com/voxpupuli/puppet-collectd.git
+[submodule "puppet/modules/epel"]
+	path = puppet/modules/epel
+	url = https://github.com/stahnma/puppet-module-epel.git

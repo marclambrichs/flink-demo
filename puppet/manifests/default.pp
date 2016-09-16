@@ -75,6 +75,10 @@ firewall { '2181 - zookeeper':
   action => 'accept'
 }
 
+node default {
+  Yumrepo <| |> -> Package <| |>
+}
+
 node 'flink' {
 
   class { 'kafka::broker':
