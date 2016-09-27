@@ -5,12 +5,15 @@ classes:
   - kafka
   - zookeeper
 
+zookeeper::repo:
+  name: 'cloudera-cdh5.8.2'
+  url: 'http://archive.cloudera.com/cdh5/redhat/7/x86_64/cdh/5.8.2/'
+  descr: 'zookeeper repo 5.8.2'
 zookeeper::cdhver: '5'
 zookeeper::initialize_datastore: true
 zookeeper::install_java: true
 zookeeper::java_package: 'java-1.8.0-openjdk'
 zookeeper::manage_service_file: true
-zookeeper::repo: 'cloudera'
 zookeeper::service_name: 'zookeeper'
 zookeeper::service_provider: 'systemd'
 zookeeper::systemd_unit_after: 'network-online.target'

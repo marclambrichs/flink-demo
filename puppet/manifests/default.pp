@@ -89,6 +89,31 @@ node 'flink' {
     },
   }
 
-  Class['zookeeper'] -> Class['kafka']
+  class { 'collectd::plugin::cpu':
+    reportbystate    => true,
+    reportbycpu      => true,
+    valuespercentage => true,
+  }
+
+  class { 'collectd::plugin::memory':
+  }
+
+  class { 'collectd::plugin::unixsock':
+    socketfile   => '/var/run/collectd-sock',
+    socketperms  => '0770',
+    deletesocket => false
+  }
+
+  class { 'collectd::plugin::write_kafka':
+    kafka_host => 'localhost',
+    kafka_port => 9092,
+    topics     => {
+      mytopic => {
+        format => 'JSON'
+      }
+    }
+  }
+
+  Class['zookeeper'] -> Class['kafka'] -> Class['collectd']
 
 }
