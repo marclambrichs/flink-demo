@@ -1,6 +1,6 @@
 hiera_include('classes')
 
-Exec { path => [ "/bin/", "/sbin/" , "/usr/bin/", "/usr/sbin/" ] }
+Exec { path => [ '/bin/', '/sbin/' , '/usr/bin/', '/usr/sbin/' ] }
 
 Package {
   allow_virtual => true,
@@ -82,11 +82,6 @@ node default {
 node 'flink' {
 
   class { 'kafka::broker':
-    config => {
-      'broker.id'                     => '0',
-      'zookeeper.connect'             => 'localhost:2181',
-      'inter.broker.protocol.version' => '0.10.0.1',
-    },
   }
 
   class { 'collectd::plugin::cpu':

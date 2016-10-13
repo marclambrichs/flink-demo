@@ -21,6 +21,10 @@ zookeeper::systemd_unit_want: 'network-online.target'
 
 kafka::version: '0.10.0.1'
 kafka::scala_version: '2.11'
+kafka::broker::config:
+  broker.id: '0'
+  zookeeper.connect: 'localhost:2181'
+  inter.broker.protocol.version: '0.10.0.1'
 
 collectd::purge: true
 collectd::recurse: true
