@@ -47,7 +47,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 ################################################################################
 
   config.vm.provider :virtualbox do |vb|
-    vb.name  = "flink.#{env}.vagrant"
+    vb.name  = "kafka.#{env}.vagrant"
     vb.customize [
       'modifyvm', :id,
       '--groups', '/Demo',
@@ -73,9 +73,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 #  config.vm.network :forwarded_port, host_ip: "#{ip}", guest: 7473, host: 7473
 
   ### define node
-  config.vm.define :flink do |node|
-    node.vm.hostname         = "flink.#{env}.vagrant"
-    node.hostmanager.aliases = %w(flink.localdomain flink)
+  config.vm.define :kafka do |node|
+    node.vm.hostname         = "kafka.#{env}.vagrant"
+    node.hostmanager.aliases = %w(kafka.localdomain kafka)
     node.vm.network :private_network, ip: "#{ip}"
   end
 
