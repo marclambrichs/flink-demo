@@ -79,7 +79,8 @@ node default {
   Yumrepo <| |> -> Package <| |>
 }
 
-node 'flink' {
+node 'kafka' {
+
 
   class { 'kafka::broker':
   }
